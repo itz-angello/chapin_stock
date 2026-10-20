@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.routes.categorias import router as categorias_router
 from app.routes.movimientos import router as movimientos_router
@@ -10,11 +13,11 @@ app.include_router(movimientos_router)
 app.include_router(productos_router)
 
 
-@app.get("/")
-def inicio():
-    return {"mensaje": "Hola desde ChapinStock"}
-
-
 @app.get("/salud")
 def salud():
     return {"estado": "ok"}
+
+
+ruta_public = Path(__file__).resolve().parent.parent / "public"
+app.mount("/", StaticFiles(directory=ruta_public, html=True, check_dir=False), name="public")
+
